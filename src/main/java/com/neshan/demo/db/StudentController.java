@@ -29,27 +29,29 @@ public class StudentController {
     }
 
     @PostMapping("/students")
-    Student newEmployee(@RequestBody Student newStudent) {
+    Student newStudent(@RequestBody Student newStudent) {
         return studentRepository.save(newStudent);
     }
 
-//    @PutMapping("/employees/{id}")
-//    Student replaceEmployee(@RequestBody Student newStudent, @PathVariable Long id) {
+    @PutMapping("/students/{id}")
+    Student replaceStudent(@RequestBody Student newStudent, @PathVariable Long id) {
+
+        return studentRepository.findById(id)
+                .map(student -> {
+                    student.setFirstName(newStudent.getFirstName());
+                    student.setAge(newStudent.getAge());
+                    student.setEmail(newStudent.getEmail());
+                    student.setLastName(newStudent.getLastName());
+                    return studentRepository.save(student);
+                })
+                .orElseGet(() -> {
+                    newStudent.setId(id);
+                    return studentRepository.save(newStudent);
+                });
+    }
 //
-//        return studentRepository.findById(id)
-//                .map(student -> {
-//                    student.setName(newStudent.getName());
-//                    student.setRole(newStudent.getRole());
-//                    return studentRepository.save(employee);
-//                })
-//                .orElseGet(() -> {
-//                    newEmployee.setId(id);
-//                    return repository.save(newEmployee);
-//                });
-//    }
-//
-//    @DeleteMapping("/employees/{id}")
-//    void deleteEmployee(@PathVariable Long id) {
-//        studentRepository.deleteById(id);
-//    }
+    @DeleteMapping("/students/{id}")
+    void deleteStudent(@PathVariable Long id) {
+        studentRepository.deleteById(id);
+    }
 }

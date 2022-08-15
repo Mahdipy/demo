@@ -1,5 +1,8 @@
 package com.neshan.demo.db;
 
+import jdk.nashorn.internal.objects.annotations.Getter;
+import jdk.nashorn.internal.objects.annotations.Setter;
+
 import javax.persistence.*;
 
 @Entity(name = "Student")
@@ -9,6 +12,7 @@ import javax.persistence.*;
                 @UniqueConstraint(name = "student_email_unique", columnNames = "email")
         }
 )
+
 public class Student {
     @Id
     @SequenceGenerator(
