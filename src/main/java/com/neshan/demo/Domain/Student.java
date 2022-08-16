@@ -1,9 +1,12 @@
 package com.neshan.demo.Domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "Student")
 @Table(
@@ -56,6 +59,13 @@ public class Student {
             nullable = false
     )
     private Integer age;
+    @JsonIgnore
+    @ManyToMany(mappedBy = "enrolledStudents")
+    private Set<Subject> subjects = new HashSet<>();
+
+    public Set<Subject> getSubjects() {
+        return subjects;
+    }
 
     public Student(String firstName, String lastName, String email, Integer age) {
         this.firstName = firstName;

@@ -1,6 +1,7 @@
 package com.neshan.demo.Controllers;
 
 import com.neshan.demo.Domain.Student;
+import com.neshan.demo.Domain.StudentDto;
 import com.neshan.demo.Exeptions.StudentNotFoundException;
 import com.neshan.demo.Repositories.StudentRepository;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +33,8 @@ public class StudentController {
     }
 
     @PostMapping("/students")
-    Student newStudent(@RequestBody Student newStudent) {
-        return studentRepository.save(newStudent);
+    Student newStudent(@RequestBody StudentDto newStudent) {
+        return studentRepository.save(new Student(newStudent.getFirstName(), newStudent.getLastName(), newStudent.getEmail(), newStudent.getAge()));
     }
 
     @PutMapping("/students/{id}")
