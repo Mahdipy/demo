@@ -1,4 +1,4 @@
-package com.neshan.demo.db;
+package com.neshan.demo.Exeptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;

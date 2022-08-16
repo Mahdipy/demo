@@ -1,5 +1,8 @@
-package com.neshan.demo.db;
+package com.neshan.demo.Controllers;
 
+import com.neshan.demo.Domain.Student;
+import com.neshan.demo.Exeptions.StudentNotFoundException;
+import com.neshan.demo.Repositories.StudentRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.neshan.demo.RestServises;
+package com.neshan.demo.Domain;
 
 public class Greeting {
 private final long id;

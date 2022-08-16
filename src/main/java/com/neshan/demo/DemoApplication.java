@@ -1,7 +1,7 @@
 package com.neshan.demo;
 
-import com.neshan.demo.db.Student;
-import com.neshan.demo.db.StudentRepository;
+import com.neshan.demo.Domain.Student;
+import com.neshan.demo.Repositories.StudentRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

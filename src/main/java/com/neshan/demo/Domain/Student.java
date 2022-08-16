@@ -1,4 +1,4 @@
-package com.neshan.demo.db;
+package com.neshan.demo.Domain;
 
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;

@@ -1,7 +1,7 @@
-package com.neshan.demo.db;
+package com.neshan.demo.Exeptions;
 
 public class StudentNotFoundException extends RuntimeException{
-    StudentNotFoundException(Long id) {
+    public StudentNotFoundException(Long id) {
         super("Could not find Student with id = " + id);
     }
 }
