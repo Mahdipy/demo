@@ -67,6 +67,11 @@ public class Student {
         return subjects;
     }
 
+    @ManyToOne
+    @JoinColumn(name="school_id", referencedColumnName = "id")
+    private School school;
+
+
     public Student(String firstName, String lastName, String email, Integer age) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -116,6 +121,14 @@ public class Student {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public School getSchool() {
+        return school;
+    }
+
+    public void setSchool(School school) {
+        this.school = school;
     }
 
     @Override

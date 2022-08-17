@@ -34,4 +34,7 @@ public class Teacher {
         return this.subjects;
     }
 
+    public void setSubjects(Set<Subject> subjects) {
+        this.subjects = subjects;
+    }
 }

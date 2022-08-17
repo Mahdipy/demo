@@ -1,33 +1,15 @@
-package com.neshan.demo.Domain;
+package com.neshan.demo.Dto;
 
-import javax.persistence.*;
+import com.neshan.demo.Domain.Student;
+import com.neshan.demo.Domain.Teacher;
+
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-public class Subject {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-
+public class SubjectDto {
     private String name;
-
-    @ManyToMany
-    @JoinTable(
-            name = "student_enrolled",
-            joinColumns = @JoinColumn(name = "subject_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id")
-    )
     public Set<Student> enrolledStudents = new HashSet<>();
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "teacher_id", referencedColumnName = "id")
     private Teacher teacher;
-
-    public Long getId() {
-        return id;
-    }
 
     public String getName() {
         return name;
@@ -52,5 +34,4 @@ public class Subject {
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
     }
-
 }
