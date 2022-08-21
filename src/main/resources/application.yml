@@ -11,3 +11,11 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: true
+
+my:
+  greeting: nice to meet you
+  values: one, two, three
+
+my-properties:
+  host: google.com
+  port: 8080

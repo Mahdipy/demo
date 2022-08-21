@@ -1,7 +1,6 @@
 package com.neshan.demo.Domain;
 
-import jdk.nashorn.internal.objects.annotations.Getter;
-import jdk.nashorn.internal.objects.annotations.Setter;
+
 
 import javax.persistence.*;
 import java.util.List;
