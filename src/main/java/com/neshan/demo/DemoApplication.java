@@ -5,7 +5,9 @@ import com.neshan.demo.Domain.MyBean;
 import com.neshan.demo.Domain.MyProperties;
 import com.neshan.demo.Domain.Student;
 import com.neshan.demo.Repositories.StudentRepository;
+import com.neshan.demo.Services.UserService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,11 +15,17 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
-@EnableScheduling
+//@EnableScheduling
 @EnableConfigurationProperties(MyProperties.class)
-public class DemoApplication {
+public class DemoApplication extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public ModelMapper modelMapper() {
@@ -64,6 +72,37 @@ public class DemoApplication {
 
 			ctx.close();
 		};
+	}
+
+	@Autowired
+	UserService userService;
+
+	@Bean
+	PasswordEncoder bcryptPasswordEncoder(){
+		return new BCryptPasswordEncoder();
+	}
+
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception{
+		auth.authenticationProvider(daoAuthenticationProvider());
+	}
+
+	@Bean
+	DaoAuthenticationProvider daoAuthenticationProvider(){
+		DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+		daoAuthenticationProvider.setPasswordEncoder(bcryptPasswordEncoder());
+		daoAuthenticationProvider.setUserDetailsService(this.userService);
+		return daoAuthenticationProvider;
+	}
+
+	@Override
+	protected void configure(HttpSecurity http) throws Exception{
+		http.csrf().disable()
+				.authorizeRequests()
+				.antMatchers("/addrole").permitAll()
+				.antMatchers("/adduser").permitAll()
+				.antMatchers("greeting").hasAnyRole("ADMIN")
+				.anyRequest().authenticated().and().httpBasic();
 	}
 
 }
