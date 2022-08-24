@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -25,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringBootApplication
 //@EnableScheduling
 @EnableConfigurationProperties(MyProperties.class)
+@EnableAsync
 public class DemoApplication extends WebSecurityConfigurerAdapter {
 
 	@Bean
@@ -35,44 +37,44 @@ public class DemoApplication extends WebSecurityConfigurerAdapter {
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
-	@Bean
-	CommandLineRunner commandLineRunner(StudentRepository studentRepository, MyProperties myProperties){
-		return args -> {
-			Student student = new Student(
-					"ali",
-					"ghasemi",
-					"ali@gmail.com",
-					14
-			);
-			studentRepository.save(student);
-			Student student2 = new Student(
-					"mahdi",
-					"py",
-					"mahdi@gmail.com",
-					22
-			);
-			studentRepository.save(student2);
-			Student student3 = new Student(
-					"negin",
-					"mohammadi",
-					"negin@gmail.com",
-					28
-			);
-			studentRepository.save(student3);
-			System.out.println(myProperties);
-			AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
-			ctx.register(MyConfiguration.class);
-			ctx.refresh();
-
-			MyBean mb1 = ctx.getBean(MyBean.class);
-			System.out.println(mb1.hashCode());
-
-			MyBean mb2 = ctx.getBean(MyBean.class);
-			System.out.println(mb2.hashCode());
-
-			ctx.close();
-		};
-	}
+//	@Bean
+//	CommandLineRunner commandLineRunner(StudentRepository studentRepository, MyProperties myProperties){
+//		return args -> {
+//			Student student = new Student(
+//					"ali",
+//					"ghasemi",
+//					"ali@gmail.com",
+//					14
+//			);
+//			studentRepository.save(student);
+//			Student student2 = new Student(
+//					"mahdi",
+//					"py",
+//					"mahdi@gmail.com",
+//					22
+//			);
+//			studentRepository.save(student2);
+//			Student student3 = new Student(
+//					"negin",
+//					"mohammadi",
+//					"negin@gmail.com",
+//					28
+//			);
+//			studentRepository.save(student3);
+//			System.out.println(myProperties);
+//			AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
+//			ctx.register(MyConfiguration.class);
+//			ctx.refresh();
+//
+//			MyBean mb1 = ctx.getBean(MyBean.class);
+//			System.out.println(mb1.hashCode());
+//
+//			MyBean mb2 = ctx.getBean(MyBean.class);
+//			System.out.println(mb2.hashCode());
+//
+//			ctx.close();
+//		};
+//	}
 
 	@Autowired
 	UserService userService;
@@ -101,7 +103,7 @@ public class DemoApplication extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 				.antMatchers("/addrole").permitAll()
 				.antMatchers("/adduser").permitAll()
-				.antMatchers("greeting").hasAnyRole("ADMIN")
+				.antMatchers("/greeting").hasAnyRole("ADMIN")
 				.anyRequest().authenticated().and().httpBasic();
 	}
 

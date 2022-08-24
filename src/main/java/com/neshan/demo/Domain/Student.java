@@ -139,6 +139,6 @@ public class Student {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", age=" + age +
-                '}';
+                "}\n";
     }
 }
