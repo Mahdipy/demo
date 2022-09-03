@@ -3,7 +3,7 @@ package com.neshan.demo.Domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class User2 {
+public class GitUser {
 
     private String name;
     private String blog;
@@ -26,6 +26,6 @@ public class User2 {
 
     @Override
     public String toString() {
-        return "User [name=" + name + ", blog=" + blog + "]\n";
+        return "User [name=" + name + ", blog=" + blog + "]";
     }
 }

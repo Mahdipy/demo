@@ -1,7 +1,7 @@
 package com.neshan.demo;
 
+import com.neshan.demo.Domain.GitUser;
 import com.neshan.demo.Domain.Student;
-import com.neshan.demo.Domain.User2;
 import com.neshan.demo.Repositories.StudentRepository;
 import com.neshan.demo.Services.GitHubLookupService;
 import org.slf4j.Logger;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -34,12 +35,13 @@ public class AppRunner implements CommandLineRunner {
         long start = System.currentTimeMillis();
 
         // Kick of multiple, asynchronous lookups
-        CompletableFuture<User2> page1 = gitHubLookupService.findUserAsync("PivotalSoftware");
-        CompletableFuture<User2> page2 = gitHubLookupService.findUserAsync("CloudFoundry");
-        CompletableFuture<User2> page3 = gitHubLookupService.findUserAsync("Spring-Projects");
+        CompletableFuture<GitUser> page1 = gitHubLookupService.findUserAsync("PivotalSoftware");
+        CompletableFuture<GitUser> page2 = gitHubLookupService.findUserAsync("CloudFoundry");
+        CompletableFuture<GitUser> page3 = gitHubLookupService.findUserAsync("Spring-Projects");
+        CompletableFuture<GitUser> page4 = gitHubLookupService.findUserAsync("Mahdipy");
 
         // Wait until they are all done
-        CompletableFuture.allOf(page1,page2,page3).join();
+        CompletableFuture.allOf(page1,page2,page3, page4).join();
 
         // Print results, including elapsed time
         logger.info("Elapsed time: " + (System.currentTimeMillis() - start));
@@ -47,21 +49,27 @@ public class AppRunner implements CommandLineRunner {
         logger.info("--> " + page2.get());
         logger.info("--> " + page3.get());
 
-//        start = System.currentTimeMillis();
-//        final FileOutputStream fout = new FileOutputStream("test.txt", true);
-//        final ObjectOutputStream out = new ObjectOutputStream(fout);
-//        List<Student> st = studentRepository.findAll();
-//        int i =0;
+        start = System.currentTimeMillis();
+        final FileOutputStream fout = new FileOutputStream("test.txt", true);
+        final ObjectOutputStream out = new ObjectOutputStream(fout);
+        List<Student> st = studentRepository.findAll();
+        int i =0;
 //        CompletableFuture<Student> studentCompletableFuture1 = null;
 //        CompletableFuture<Student> studentCompletableFuture2 = null;
 //        CompletableFuture<Student> studentCompletableFuture3 = null;
-//        for (i = 0; i<333; i++){
-//            studentCompletableFuture1 = gitHubLookupService.printUserAsync(st.get(i), out );
-//            studentCompletableFuture2 = gitHubLookupService.printUserAsync(st.get(i+333), out );
-//            studentCompletableFuture3 = gitHubLookupService.printUserAsync(st.get(i+666), out );
-//        }
-//        CompletableFuture.allOf(studentCompletableFuture1,studentCompletableFuture2,studentCompletableFuture3).join();
-//        logger.info("Elapsed time: " + (System.currentTimeMillis() - start));
+//        List ls = new ArrayList();
+
+        for (i = 0; i<st.size(); i++){
+
+            CompletableFuture<Student> studentCompletableFuture = gitHubLookupService.printUserAsync(st.get(i), out );
+//            ls.add(studentCompletableFuture);
+//            CompletableFuture<Student> studentCompletableFuture2 = gitHubLookupService.printUserAsync(st.get(i+333), out );
+//            CompletableFuture<Student> studentCompletableFuture3 = gitHubLookupService.printUserAsync(st.get(i+666), out );
+            CompletableFuture.allOf(studentCompletableFuture).join();
+        }
+//        CompletableFuture.allOf().join();
+
+        logger.info("Elapsed time: " + (System.currentTimeMillis() - start));
 
     }
 

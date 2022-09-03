@@ -1,8 +1,7 @@
 package com.neshan.demo.Services;
 
 import com.neshan.demo.Domain.Student;
-import com.neshan.demo.Domain.User;
-import com.neshan.demo.Domain.User2;
+import com.neshan.demo.Domain.GitUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -21,18 +20,27 @@ public class GitHubLookupService {
 
     private final RestTemplate restTemplate;
 
+    /**
+     * constructor
+     * @param restTemplateBuilder
+     */
     public GitHubLookupService(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
     }
 
+    /**
+     * @param user name of a github account
+     * @return CompletableFuture
+     * @throws InterruptedException for thread handling
+     */
     @Async
-    public CompletableFuture<User2> findUserAsync(String user) throws InterruptedException {
+    public CompletableFuture<GitUser> findUserAsync(String user) throws InterruptedException {
         logger.info("Looking up " + user);
         String url = String.format("https://api.github.com/users/%s", user);
-        User2 results = restTemplate.getForObject(url, User2.class);
+        GitUser results = restTemplate.getForObject(url, GitUser.class);
         try (final FileOutputStream fout = new FileOutputStream("test.txt", true);
              final ObjectOutputStream out = new ObjectOutputStream(fout)) {
-            out.writeObject(results.toString());
+            out.writeObject(results.toString()+Thread.currentThread().getName()+"\n");
             out.flush();
             System.out.println("success");
         } catch (IOException e) {
@@ -44,9 +52,15 @@ public class GitHubLookupService {
     }
 
 
+    /**
+     * @param student object
+     * @param out output stream object for writing into file
+     * @return CompletableFuture
+     * @throws IOException for file handling
+     */
     @Async
-    public CompletableFuture<Student> printUserAsync(Student student, ObjectOutputStream out) throws IOException {
-        out.writeObject(student.toString());
+    public  synchronized CompletableFuture<Student> printUserAsync(Student student, ObjectOutputStream out) throws IOException {
+        out.writeObject(student.toString()+Thread.currentThread().getName()+"|"+Thread.activeCount()+"\n");
         out.flush();
         return CompletableFuture.completedFuture(student);
     }
