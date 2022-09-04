@@ -3,8 +3,11 @@ package com.neshan.demo.Dto;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 
+import java.io.Serializable;
 
-public class StudentDto {
+
+public class StudentDto implements Serializable {
+    private static final long serialVersionUID = 7156526077883281623L;
     private String firstName;
     private String lastName;
     private String email;

@@ -1,14 +1,18 @@
 package com.neshan.demo.Controllers;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
 import com.neshan.demo.Domain.Student;
 import com.neshan.demo.Dto.StudentDto;
 import com.neshan.demo.Exeptions.StudentNotFoundException;
 import com.neshan.demo.Repositories.StudentRepository;
 import com.neshan.demo.Services.StudentService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.List;
@@ -28,6 +31,7 @@ import java.util.stream.Collectors;
 @RestController
 public class StudentController {
     private final StudentRepository studentRepository;
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private StudentService studentService;
@@ -71,9 +75,10 @@ public class StudentController {
     }
 
     //get one student by id
+    @Cacheable(value = "students", key = "#id", unless = "#result.age > 30")
     @GetMapping("/students/{id}")
-    StudentDto one(@PathVariable Long id) {
-
+    public StudentDto one(@PathVariable Long id) {
+        LOG.info("Getting student with ID {}." , id);
         return studentRepository.findById(id).map(this::convertEntitytoDTO)
                 .orElseThrow(() -> new StudentNotFoundException(id));
     }
@@ -92,8 +97,9 @@ public class StudentController {
     }
 
     //edit student
+    @CachePut(value = "students", key = "#id")
     @PutMapping("/students/{id}")
-    Optional<StudentDto> replaceStudent(@RequestBody StudentDto newStudent, @PathVariable Long id) {
+    public Optional<StudentDto> replaceStudent(@RequestBody StudentDto newStudent, @PathVariable Long id) {
 
         return studentRepository.findById(id)
                 .map(student -> {
@@ -111,8 +117,9 @@ public class StudentController {
     }
 
     //delete student by id
+    @CacheEvict(value = "students", allEntries=true)
     @DeleteMapping("/students/{id}")
-    void deleteStudent(@PathVariable Long id) {
+    public void deleteStudent(@PathVariable Long id) {
         studentRepository.deleteById(id);
     }
 

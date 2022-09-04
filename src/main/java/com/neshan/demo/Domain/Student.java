@@ -5,6 +5,7 @@ import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,7 +17,8 @@ import java.util.Set;
         }
 )
 
-public class Student {
+public class Student implements Serializable {
+    private static final long serialVersionUID = 7156526077883281623L;
     @Id
     @SequenceGenerator(
             name = "student_sequence",
